@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Satisfação - UBS Monsenhor Hipólito</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Pesquisa de Satisfação</h1>
+            <div class="subtitle">Sistema de Saúde - UBS Monsenhor Hipólito</div>
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="spinner"></div>
+                <span>Carregando dados...</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" style="opacity: 0;">
+            <!-- Estatísticas Gerais -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number" id="totalResponses">0</div>
+                    <div class="stat-label">Respostas Coletadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number" id="avgRating">0</div>
+                    <div class="stat-label">Nota Média Experiência UBS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-number" id="satisfactionRate">0%</div>
+                    <div class="stat-label">Taxa de Satisfação (Nota 4-5)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🕒</div>
+                    <div class="stat-number" id="avgScheduleRating">0</div>
+                    <div class="stat-label">Nota Média Horário Corrido</div>
+                </div>
+            </div>
+
+            <!-- Cards de Resumo -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>📅 Período da Pesquisa</h3>
+                    <div id="periodInfo" class="summary-value">-</div>
+                    <div class="summary-detail" id="periodDetail">-</div>
+                </div>
+                <div class="summary-card">
+                    <h3>👥 Análise Etária</h3>
+                    <div id="ageInfo" class="summary-value">-</div>
+                    <div class="age-distribution" id="ageDistribution"></div>
+                </div>
+                <div class="summary-card">
+                    <h3>✅ Expectativas Atendidas</h3>
+                    <div id="expectationsInfo" class="summary-value">-</div>
+                    <div class="expectations-chart" id="expectationsChart"></div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">📈 Distribuição de Notas - Experiência na UBS</h3>
+                    <div class="chart-bars" id="ubsChart"></div>
+                    <div class="chart-labels">
+                        <span>Nota 1</span>
+                        <span>Nota 2</span>
+                        <span>Nota 3</span>
+                        <span>Nota 4</span>
+                        <span>Nota 5</span>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">🕐 Avaliação do Horário Corrido</h3>
+                    <div class="chart-bars" id="scheduleChart"></div>
+                    <div class="chart-labels">
+                        <span>Nota 1</span>
+                        <span>Nota 2</span>
+                        <span>Nota 3</span>
+                        <span>Nota 4</span>
+                        <span>Nota 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Respostas -->
+            <div class="table-section">
+                <div class="table-header">
+                    <h2 class="section-title">📋 Todas as Respostas da Pesquisa</h2>
+                    <div class="table-controls">
+                        <input type="text" id="searchInput" placeholder="Buscar nas respostas..." class="search-input">
+                        <select id="filterRating" class="filter-select">
+                            <option value="">Todas as notas</option>
+                            <option value="5">Nota 5</option>
+                            <option value="4">Nota 4</option>
+                            <option value="3">Nota 3</option>
+                            <option value="2">Nota 2</option>
+                            <option value="1">Nota 1</option>
+                        </select>
+                        <button onclick="exportToCSV()" class="export-btn">📊 Exportar CSV</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)">Data 📅</th>
+                                <th onclick="sortTable(1)">Nome 👤</th>
+                                <th onclick="sortTable(2)">Idade 🎂</th>
+                                <th onclick="sortTable(3)">Exp. UBS ⭐</th>
+                                <th onclick="sortTable(4)">Expectativas ✅</th>
+                                <th onclick="sortTable(5)">Horário 🕒</th>
+                                <th>Sugestões 💭</th>
+                            </tr>
+                        </thead>
+                        <tbody id="responsesTable">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <div class="pagination" id="pagination"></div>
+                    <div class="table-info" id="tableInfo">Mostrando 0 de 0 respostas</div>
+                </div>
+            </div>
+
+            <!-- Análise de Comentários -->
+            <div class="feedback-analysis">
+                <h2 class="section-title">💬 Análise dos Comentários e Sugestões</h2>
+                
+                <div class="feedback-stats">
+                    <div class="feedback-stat">
+                        <div class="feedback-number" id="totalComments">0</div>
+                        <div class="feedback-label">Comentários</div>
+                    </div>
+                    <div class="feedback-stat">
+                        <div class="feedback-number" id="positiveComments">0</div>
+                        <div class="feedback-label">Positivos</div>
+                    </div>
+                    <div class="feedback-stat">
+                        <div class="feedback-number" id="suggestionComments">0</div>
+                        <div class="feedback-label">Sugestões</div>
+                    </div>
+                </div>
+
+                <div class="feedback-categories">
+                    <div class="category-card excellent">
+                        <h4>🌟 Comentários Excelentes (Nota 5)</h4>
+                        <div class="feedback-list" id="excellentFeedback"></div>
+                    </div>
+                    
+                    <div class="category-card good">
+                        <h4>👍 Comentários Bons (Nota 4)</h4>
+                        <div class="feedback-list" id="goodFeedback"></div>
+                    </div>
+                    
+                    <div class="category-card suggestions">
+                        <h4>💡 Principais Sugestões de Melhoria</h4>
+                        <div class="feedback-list" id="suggestionsFeedback"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Automáticos -->
+            <div class="insights-section">
+                <h2 class="section-title">🔍 Insights e Análises</h2>
+                <div class="insights-grid" id="insightsGrid">
+                    <!-- Insights will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
