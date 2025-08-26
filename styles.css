@@ -672,6 +672,16 @@ body {
     }
 }
 
+@media (max-width: 900px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modern-table {
+    min-width: 700px;
+  }
+}
+
 /* Scrollbar personalizada */
 ::-webkit-scrollbar {
     width: 8px;

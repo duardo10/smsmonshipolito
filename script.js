@@ -63,6 +63,10 @@ function getDate(val) {
     return match ? new Date(match[1]) : null;
 }
 
+function normalizeText(txt) {
+    return (txt || '').toLowerCase().normalize('NFD').replace(/[ - -]/g, '').replace(/[^a-z]/g, '');
+}
+
 // Renderização principal do dashboard
 function renderDashboard(data) {
     // Estatísticas gerais
@@ -97,10 +101,10 @@ function renderDashboard(data) {
     }
 
     // Expectativas atendidas
-    const expectations = data.map(d => (d['4. O atendimento que você recebeu atendeu às suas expectativas? '] || '').toLowerCase());
-    const yes = expectations.filter(e => e === 'sim').length;
+    const expectations = data.map(d => normalizeText(d['4. O atendimento que você recebeu atendeu às suas expectativas?']));
+    const yes = expectations.filter(e => e.includes('sim')).length;
     const partial = expectations.filter(e => e.includes('parcial')).length;
-    const no = expectations.filter(e => e === 'não').length;
+    const no = expectations.filter(e => e.includes('nao') || e.includes('não')).length;
     document.getElementById('expectationsInfo').textContent = `Sim: ${yes} | Parcial: ${partial} | Não: ${no}`;
     renderExpectationsChart(yes, partial, no);
 
